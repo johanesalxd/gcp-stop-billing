@@ -90,6 +90,8 @@ gcloud eventarc triggers create billing-trigger \
     --project=YOUR_PROJECT_ID
 ```
 
+**Note:** Eventarc may auto-generate a trigger name (e.g., `trigger-xxxxxxxx`) instead of using your specified name. This is normal and doesn't affect functionality.
+
 ## Configuration
 
 ### Enable Live Billing Disablement
@@ -161,6 +163,23 @@ web: functions-framework --target=stop_billing --signature-type=cloudevent
 **Cause:** Eventarc trigger can't invoke Cloud Run.
 
 **Solution:** Grant `roles/run.invoker` permission (see Step 4 above).
+
+### Verify Billing Account Permissions
+
+To verify the service account has billing permissions:
+
+```bash
+# List your billing accounts
+gcloud billing accounts list
+
+# Check permissions (run from Cloud Shell if needed)
+gcloud billing accounts get-iam-policy YOUR_BILLING_ACCOUNT_ID \
+    --flatten="bindings[].members" \
+    --filter="bindings.members:${PROJECT_NUMBER}-compute" \
+    --format="table(bindings.role,bindings.members)"
+```
+
+Expected output should show `roles/billing.admin` for your compute service account.
 
 ## Files
 
