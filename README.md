@@ -141,6 +141,56 @@ Getting billing info for project 'projects/YOUR_PROJECT_ID'...
 Billing disabled: name: "projects/YOUR_PROJECT_ID/billingInfo"
 ```
 
+## Recovery After Billing Disabled
+
+If billing was automatically disabled due to budget exceeded, follow these steps to restore service:
+
+### Step 1: Re-attach Billing
+
+Re-enable billing via Console or CLI:
+
+```bash
+gcloud billing projects link YOUR_PROJECT_ID \
+    --billing-account=YOUR_BILLING_ACCOUNT_ID
+```
+
+Find your billing account ID:
+```bash
+gcloud billing accounts list
+```
+
+### Step 2: Verify Protection is Active
+
+Run the verification script to ensure all components are working:
+
+```bash
+./verify-billing-protection.sh
+```
+
+Or specify the project explicitly:
+```bash
+./verify-billing-protection.sh YOUR_PROJECT_ID
+```
+
+Expected output:
+```
+Billing Protection Verification
+Project: YOUR_PROJECT_ID
+Region: asia-southeast1
+
+Checking Cloud Run service... ✓ PASS
+Checking Eventarc trigger... ✓ PASS
+Checking Pub/Sub topic... ✓ PASS
+Checking Pub/Sub subscription... ✓ PASS
+Checking Pub/Sub service agent permissions... ✓ PASS
+Checking Cloud Run invoker permission... ✓ PASS
+
+✓ ALL CHECKS PASSED
+Billing protection is active and ready.
+```
+
+If any checks fail, refer to the setup instructions above to fix the configuration.
+
 ## Troubleshooting
 
 ### Error: "Failed to find attribute 'app' in 'main'"
@@ -186,6 +236,7 @@ Expected output should show `roles/billing.admin` for your compute service accou
 - `main.py` - Cloud Run function code
 - `requirements.txt` - Python dependencies
 - `Procfile` - Functions framework configuration
+- `verify-billing-protection.sh` - Verification script for checking system health
 - `README.md` - This documentation
 
 ## Architecture
