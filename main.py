@@ -53,7 +53,7 @@ def stop_billing(cloud_event: CloudEvent) -> None:
     # TODO(developer): As stoping billing is a destructive action
     # for your project, change the following constant to False
     # after you validate with a test budget.
-    SIMULATE_DEACTIVATION = True
+    SIMULATE_DEACTIVATION = False
 
     PROJECT_ID = get_project_id()
     PROJECT_NAME = f"projects/{PROJECT_ID}"
